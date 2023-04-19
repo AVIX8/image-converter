@@ -9,6 +9,7 @@ const formats = {
 };
 
 class Image {
+    image;
     width = 0;
     height = 0;
     canvas;
@@ -19,12 +20,12 @@ class Image {
     constructor() { }
 
     async loadImage(src) {
-        const image = await loadImage(src);
-        this.width = image.width;
-        this.height = image.height;
+        this.image = await loadImage(src);
+        this.width = this.image.width;
+        this.height = this.image.height;
         this.canvas = createCanvas(this.width, this.height);
         this.ctx = this.canvas.getContext("2d");
-        this.ctx.drawImage(image, 0, 0);
+        this.ctx.drawImage(this.image, 0, 0);
         this.imageData = this.ctx.getImageData(0, 0, this.width, this.height);
         this.normalizeImageData();
     }
@@ -67,6 +68,16 @@ class Image {
         }
 
         return false;
+    }
+
+    resize(width, height) {
+        this.width = Math.floor(width);
+        this.height = Math.floor(height);
+        this.canvas = createCanvas(this.width, this.height);
+        this.ctx = this.canvas.getContext("2d");
+        this.ctx.drawImage(this.image, 0, 0, this.width, this.height);
+        this.imageData = this.ctx.getImageData(0, 0, this.width, this.height);
+        this.normalizeImageData();
     }
 }
 
