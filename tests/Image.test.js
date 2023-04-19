@@ -102,4 +102,59 @@ describe("Image", () => {
             expect(image1.compare(image2)).toBe(true);
         });
     });
+
+    describe("Изменение размеров изображений", () => {
+        it("сжать в 2.5 раза по ширине", async () => {
+            await image1.loadImage(lambaPath);
+            const {width, height} = image1;
+            image1.resize(width/2.5, height);
+
+            const newPath = path.join(outputDir, "lamba_w040.png");
+            image1.save(newPath);
+
+            await image2.loadImage(newPath)
+            expect(image2.width).toBe(Math.floor(width/2.5));
+            expect(image2.height).toBe(height);
+        });
+
+        it("растянуть в 1.5 раза по ширине", async () => {
+            await image1.loadImage(lambaPath);
+            const {width, height} = image1;
+            image1.resize(width*1.5, height);
+
+            const newPath = path.join(outputDir, "lamba_w150.png");
+            image1.save(newPath);
+
+            await image2.loadImage(newPath)
+            expect(image2.width).toBe(Math.floor(width*1.5));
+            expect(image2.height).toBe(height);
+        });
+
+        it("сжать в 1.5 раза по высоте", async () => {
+            await image1.loadImage(lambaPath);
+            const {width, height} = image1;
+            image1.resize(width, height/1.5);
+
+            const newPath = path.join(outputDir, "lamba_h066.png");
+            image1.save(newPath);
+
+            await image2.loadImage(newPath)
+            expect(image2.width).toBe(width);
+            expect(image2.height).toBe(Math.floor(height/1.5));
+        });
+
+        it("растянуть в 2.5 раза по высоте", async () => {
+            await image1.loadImage(lambaPath);
+            const {width, height} = image1;
+            image1.resize(width, height*2.5);
+
+            const newPath = path.join(outputDir, "lamba_h250.png");
+            image1.save(newPath);
+
+            await image2.loadImage(newPath)
+            expect(image2.width).toBe(width);
+            expect(image2.height).toBe(Math.floor(height*2.5));
+        });
+       
+    });
 });
