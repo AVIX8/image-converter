@@ -13,6 +13,8 @@ class Image {
     height = 0;
     canvas;
     ctx;
+    imageData;
+    normalizedImageData;
 
     constructor() { }
 
@@ -23,6 +25,8 @@ class Image {
         this.canvas = createCanvas(this.width, this.height);
         this.ctx = this.canvas.getContext("2d");
         this.ctx.drawImage(image, 0, 0);
+        this.imageData = this.ctx.getImageData(0, 0, this.width, this.height);
+        this.normalizeImageData();
     }
 
     getFormat(filePath) {
@@ -37,6 +41,29 @@ class Image {
         const format = this.getFormat(outputPath)
         const buffer = this.canvas.toBuffer(format);
         fs.writeFileSync(outputPath, buffer);
+    }
+
+    normalizeImageData() {
+        const { data } = this.imageData;
+        this.normalizedImageData = data.map((w, i) =>
+            i % 4 == 3 ? 255 : Math.floor((w * data[i + 3 - (i % 4)]) / 255)
+        );
+    }
+
+    compare(image, maxDiff = 0.005) {
+        const data1 = this.normalizedImageData;
+        const data2 = image.normalizedImageData;
+
+        if (data1.length !== data2.length) {
+            return false;
+        }
+        const diff = data1.reduce((acc, x, i) => acc + Math.abs(x - data2[i]), 0);
+
+        if (diff < maxDiff * this.width * this.height * 3 * 255) {
+            return true;
+        }
+
+        return false;
     }
 }
 
