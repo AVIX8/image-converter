@@ -38,8 +38,11 @@ class Image {
     }
 
     async save(outputPath) {
-        const format = this.getFormat(outputPath)
-        const buffer = this.canvas.toBuffer(format);
+        const format = this.getFormat(outputPath);
+        const buffer = this.canvas.toBuffer(format, {
+            quality: 1,
+            chromaSubsampling: false,
+        });
         fs.writeFileSync(outputPath, buffer);
     }
 
