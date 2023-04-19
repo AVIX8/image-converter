@@ -6,6 +6,8 @@ const inputDir = path.join(process.cwd(), 'images')
 const outputDir = path.join(process.cwd(), 'out');
 
 const catPath = path.join(inputDir, 'cat.jpg');
+const lambaPath = path.join(inputDir, 'lamba.png');
+const trillionsPath = path.join(inputDir, '4trillions.jpg');
 
 const png16 = path.join(inputDir, '16x16.png');
 const png16corrupted = path.join(inputDir, '16x16-2.png');
@@ -64,6 +66,48 @@ describe('Image', () => {
             await image1.loadImage(png16);
             await image2.loadImage(catPath);
             expect(image1.compare(image2)).toBe(false)
+        })
+    })
+
+    describe('Конвертация изображений', () => {
+        it('png в jpg', async () => {
+            const image1 = new Image();
+            const image2 = new Image();
+            await image1.loadImage(png16);
+            const newPath = path.join(outputDir, 'jpg16.jpg');
+            image1.save(newPath)
+            await image2.loadImage(newPath);
+            expect(image1.compare(image2)).toBe(true)
+        })
+
+        it('jpg в png', async () => {
+            const image1 = new Image();
+            const image2 = new Image();
+            await image1.loadImage(jpg16);
+            const newPath = path.join(outputDir, 'png16.png');
+            image1.save(newPath)
+            await image2.loadImage(newPath);
+            expect(image1.compare(image2)).toBe(true)
+        })
+
+        it('Крупное изображение (png в jpg)', async () => {
+            const image1 = new Image();
+            const image2 = new Image();
+            await image1.loadImage(lambaPath);
+            const newPath = path.join(outputDir, 'lamba.jpg');
+            image1.save(newPath)
+            await image2.loadImage(newPath);
+            expect(image1.compare(image2)).toBe(true)
+        })
+
+        it('Крупное изображение (jpg в png)', async () => {
+            const image1 = new Image();
+            const image2 = new Image();
+            await image1.loadImage(trillionsPath);
+            const newPath = path.join(outputDir, '4trillions.png');
+            image1.save(newPath)
+            await image2.loadImage(newPath);
+            expect(image1.compare(image2)).toBe(true)
         })
     })
 })
