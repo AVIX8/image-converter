@@ -4,6 +4,8 @@ const fs = require("fs");
 
 const inputDir = path.join(process.cwd(), "images");
 const outputDir = path.join(process.cwd(), "out");
+if (!fs.existsSync(outputDir))
+    fs.mkdirSync(outputDir)
 
 const catPath = path.join(inputDir, "cat.jpg");
 const lambaPath = path.join(inputDir, "lamba.png");
